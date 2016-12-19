@@ -15,9 +15,9 @@
 ##
 ##
 ##
-ifeq ($(ARCH),x86)
-obj-y                         += vbox/
-endif
+#ifeq ($(ARCH),x86)
+#obj-y                         += vbox/
+#endif
 ##
 ##
 ##
