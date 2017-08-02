@@ -68,8 +68,8 @@ getall() {
 				dpkg-deb --extract $filename tmp
 			done
 			find tmp -name "*.ko" | while read f; do
-				modinfo $f | grep ^firmware >> $fwinfo
-			done
+				modinfo $f | grep ^firmware
+			done > $fwinfo
 			if [ -f tmp/boot/abi-* ]; then
 				mv tmp/boot/abi-* $abidir/$arch/$sub
 			else
@@ -87,8 +87,7 @@ getall() {
 				cd tmp;
 				# Prevent exposing some errors when called by python scripts. SIGPIPE seems to get
 				# exposed when using the `find ...` form of the command.
-				ko=$(find lib/modules/$verabi-$sub/kernel \
-					-name '*.ko' | head -1)
+				ko="$(find lib/modules/$verabi-$sub/vdso -name '*.so' | head -1)"
 				readelf -p .comment "$ko" | gawk '
 					($1 == "[") {
 						printf("%s", $3);
