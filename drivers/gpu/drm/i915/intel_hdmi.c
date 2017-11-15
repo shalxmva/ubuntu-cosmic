@@ -1234,7 +1234,7 @@ static int intel_hdmi_source_max_tmds_clock(struct drm_i915_private *dev_priv)
 {
 	if (IS_G4X(dev_priv))
 		return 165000;
-	else if (IS_GEMINILAKE(dev_priv))
+	else if (INTEL_GEN(dev_priv) >= 10 || IS_GEMINILAKE(dev_priv))
 		return 594000;
 	else if (IS_HASWELL(dev_priv) || INTEL_INFO(dev_priv)->gen >= 8)
 		return 300000;
@@ -1498,7 +1498,8 @@ bool intel_hdmi_compute_config(struct intel_encoder *encoder,
 
 	pipe_config->lane_count = 4;
 
-	if (scdc->scrambling.supported && IS_GEMINILAKE(dev_priv)) {
+	if (scdc->scrambling.supported && (INTEL_GEN(dev_priv) >= 10 ||
+					   IS_GEMINILAKE(dev_priv))) {
 		if (scdc->scrambling.low_rates)
 			pipe_config->hdmi_scrambling = true;
 
@@ -2035,7 +2036,7 @@ void intel_hdmi_init_connector(struct intel_digital_port *intel_dig_port,
 	connector->doublescan_allowed = 0;
 	connector->stereo_allowed = 1;
 
-	if (IS_GEMINILAKE(dev_priv))
+	if (INTEL_GEN(dev_priv) >= 10 || IS_GEMINILAKE(dev_priv))
 		connector->ycbcr_420_allowed = true;
 
 	intel_hdmi->ddc_bus = intel_hdmi_ddc_pin(dev_priv, port);
