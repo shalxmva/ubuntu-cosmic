@@ -58,7 +58,6 @@ lockd
 loop
 lzo
 lzo_compress
-lzo_decompress
 mac-celtic
 mac-centeuro
 mac-croatian
