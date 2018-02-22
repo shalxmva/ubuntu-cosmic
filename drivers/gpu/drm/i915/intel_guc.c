@@ -229,7 +229,7 @@ int intel_guc_sample_forcewake(struct intel_guc *guc)
 	u32 action[2];
 
 	action[0] = INTEL_GUC_ACTION_SAMPLE_FORCEWAKE;
-	/* WaRsDisableCoarsePowerGating:skl,bxt */
+	/* WaRsDisableCoarsePowerGating:skl,cnl */
 	if (!intel_rc6_enabled() ||
 	    NEEDS_WaRsDisableCoarsePowerGating(dev_priv))
 		action[1] = 0;
