@@ -25,7 +25,6 @@ crc32_generic
 crct10dif_common
 crct10dif_generic
 cryptoloop
-dax
 deflate
 des_generic
 dm-mod
