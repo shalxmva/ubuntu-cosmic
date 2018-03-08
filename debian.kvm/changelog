@@ -1,0 +1,13 @@
+linux-kvm (4.15.0-1001.1) UNRELEASED; urgency=low
+
+  [ Kamal Mostafa ]
+
+  * Initial linux-kvm packaging based on Ubuntu Bionic (4.15.0-11.12)
+
+ -- Kamal Mostafa <kamal@canonical.com>  Thu, 08 Mar 2018 10:29:36 -0800
+
+linux-kvm (4.15.0-1000.0) bionic; urgency=low
+
+  * Empty entry
+
+ -- Kamal Mostafa <kamal@canonical.com>  Thu, 08 Mar 2018 10:29:36 -0800
