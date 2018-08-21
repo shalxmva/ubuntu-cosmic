@@ -1,10 +1,10 @@
-name: pc-kernel
+name: pi2-kernel
 version: null
 version-script: |
     . debian/debian.env
     dpkg-parsechangelog -l $DEBIAN/changelog -S version
-summary: The Ubuntu generic Linux kernel
-description: This Ubuntu generic Linux kernel
+summary: The Canonical raspi2 Linux kernel
+description: The Canonical raspi2 Linux kernel
 grade: stable
 confinement: strict
 type: kernel
@@ -14,14 +14,16 @@ parts:
     plugin: kernel
     source: .
     source-type: git
-    kconfigflavour: generic
+    kconfigflavour: raspi2
     kconfigs:
       - CONFIG_DEBUG_INFO=n
+    kernel-image-target: zImage
     override-build: |
       cp debian/scripts/retpoline-extract-one \
         $SNAPCRAFT_PART_BUILD/scripts/ubuntu-retpoline-extract-one
       snapcraftctl build
-    kernel-with-firmware: false
+      tar -C $SNAPCRAFT_PART_INSTALL/dtbs -f $SNAPCRAFT_PART_INSTALL/dtbs/overlays.tgz -czv overlays
+      rm -rf $SNAPCRAFT_PART_INSTALL/dtbs/overlays
   firmware:
     plugin: nil
     stage-packages:
@@ -34,3 +36,24 @@ parts:
     build-packages:
       - cpio
       - libssl-dev
+      - dpkg-dev
+  raspiwififw:
+    plugin: nil
+    source: .
+    after:
+      - firmware
+    override-build: |
+      PKGS="http://ppa.launchpad.net/snappy-dev/image/ubuntu/dists/bionic/main/binary-armhf/Packages.gz"
+      PKGPATH="$(wget -q -O- $PKGS|zcat|grep-dctrl raspberrypi-wireless-firmware |\
+        grep Filename|tail -1| sed 's/^Filename: //')"
+      wget http://ppa.launchpad.net/snappy-dev/image/ubuntu/$PKGPATH
+      dpkg -x $(basename $PKGPATH) unpack/
+      snapcraftctl build
+      mkdir -p $SNAPCRAFT_PART_INSTALL/firmware/brcm
+      mv unpack/usr/share/doc/raspberrypi-wireless-firmware $SNAPCRAFT_PART_INSTALL/firmware/rpi-wlanfw-licenses
+      mv unpack/lib/firmware/brcm/* $SNAPCRAFT_PART_INSTALL/firmware/brcm
+    build-packages:
+      - coreutils
+      - dctrl-tools
+      - sed
+      - wget
